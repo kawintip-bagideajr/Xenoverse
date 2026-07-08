@@ -18,6 +18,23 @@ export default function App() {
     document.addEventListener('pointerdown', unlock, { once: true })
     return () => document.removeEventListener('pointerdown', unlock)
   }, [])
+
+  // Auto-reload when a new deployment is detected
+  useEffect(() => {
+    if (import.meta.env.DEV) return
+    let currentVersion = null
+    const check = async () => {
+      try {
+        const res = await fetch('/version.json?_=' + Date.now(), { cache: 'no-store' })
+        const { v } = await res.json()
+        if (currentVersion === null) { currentVersion = v }
+        else if (v !== currentVersion) { window.location.reload() }
+      } catch {}
+    }
+    check()
+    const id = setInterval(check, 30000)
+    return () => clearInterval(id)
+  }, [])
   const [activePlanet, setActivePlanet] = useState(null)
   const [warping, setWarping] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
