@@ -84,6 +84,16 @@ const MISSIONS = [
   },
   {
     id: '003',
+    date: 'Jul 8, 2026',
+    title: 'XENOVERSE — PORTFOLIO DEPLOYED',
+    desc: 'Built the team\'s own identity from scratch. A fully interactive 3D space portfolio powered by React Three Fiber — procedural planet textures, holographic HUD panels, starburst star, custom cursor, and real-time nebula. Every section is a planet you orbit into.',
+    tags: ['Three.js', 'React', 'WebGL', 'Procedural'],
+    status: 'LIVE',
+    locked: false,
+    url: 'https://xenoverse-portfolio.vercel.app',
+  },
+  {
+    id: '004',
     date: 'Q3 · 2026',
     title: 'NEXT MISSION',
     desc: null,
@@ -92,7 +102,7 @@ const MISSIONS = [
     locked: true,
   },
   {
-    id: '004',
+    id: '005',
     date: 'CLASSIFIED',
     title: 'CLASSIFIED',
     desc: null,
