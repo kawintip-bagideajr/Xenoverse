@@ -15,7 +15,7 @@ function NebulaCloud({ position, color, scale, speed, texture }) {
     if (spriteRef.current) {
       spriteRef.current.material.rotation = t * speed
       // Gentle breathing effect for the gaseous clouds
-      spriteRef.current.material.opacity = (isLowEnd ? 0.1 : 0.18) + Math.sin(t * 0.35 + position[0]) * 0.04
+      spriteRef.current.material.opacity = (isLowEnd ? 0.14 : 0.26) + Math.sin(t * 0.35 + position[0]) * 0.06
     }
   })
 
@@ -25,7 +25,7 @@ function NebulaCloud({ position, color, scale, speed, texture }) {
         map={texture}
         color={new THREE.Color(color)}
         transparent
-        opacity={0.18}
+        opacity={0.26}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
@@ -80,14 +80,16 @@ function StarDust() {
   )
 }
 
-// Vivid deep-space nebula cloud placements
+// Vivid deep-space nebula cloud placements — warm orange/red vs cool blue contrast
 const CLOUDS = [
-  { position: [-42, 6, -72], color: '#0ea5e9', scale: [58, 38, 1], speed: 0.0022 },
-  { position: [52, -12, -52], color: '#7c3aed', scale: [62, 44, 1], speed: -0.0018 },
-  { position: [-68, -6, 18], color: '#9333ea', scale: [52, 36, 1], speed: 0.003 },
-  { position: [28, 22, -85], color: '#1d4ed8', scale: [70, 48, 1], speed: -0.0012 },
-  { position: [-18, -22, -55], color: '#db2777', scale: [38, 28, 1], speed: 0.004 },
-  { position: [68, 12, -38], color: '#4f46e5', scale: [48, 34, 1], speed: -0.0020 },
+  { position: [-42, 6, -72],  color: '#0ea5e9', scale: [72, 48, 1], speed: 0.0022 },   // cool blue
+  { position: [52, -12, -52], color: '#ea6a00', scale: [78, 54, 1], speed: -0.0018 },  // warm orange
+  { position: [-68, -6, 18],  color: '#9333ea', scale: [62, 42, 1], speed: 0.003 },    // purple
+  { position: [28, 22, -85],  color: '#c23000', scale: [85, 58, 1], speed: -0.0012 },  // deep red-orange
+  { position: [-18, -22, -55],color: '#1d4ed8', scale: [52, 36, 1], speed: 0.004 },    // deep blue
+  { position: [68, 12, -38],  color: '#ff6a00', scale: [62, 44, 1], speed: -0.0020 },  // bright orange
+  { position: [-50, 18, -40], color: '#0c4a9f', scale: [56, 38, 1], speed: 0.0015 },   // midnight blue
+  { position: [40, -18, -65], color: '#7c3aed', scale: [68, 46, 1], speed: -0.0025 },  // violet
 ]
 
 export default function NebulaEffect() {

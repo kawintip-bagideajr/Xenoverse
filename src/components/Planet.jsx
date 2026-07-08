@@ -150,7 +150,7 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
       const s = scaleBase + Math.sin(t * 3.0 + data.startAngle) * 0.01
       glowRef.current.scale.setScalar(s)
       
-      const targetGlowPower = (hovered || isActive) ? 2.8 : 4.8
+      const targetGlowPower = (hovered || isActive) ? 1.6 : 3.2
       glowRef.current.material.uniforms.glowPower.value = THREE.MathUtils.lerp(
         glowRef.current.material.uniforms.glowPower.value,
         targetGlowPower,
@@ -188,10 +188,11 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
         <sphereGeometry args={[data.size, 64, 32]} />
         <meshStandardMaterial
           map={planetTexture}
-          roughness={0.5}
-          metalness={0.2}
+          emissiveMap={planetTexture ?? undefined}
           emissive={color}
-          emissiveIntensity={isActive ? 0.9 : hovered ? 0.55 : 0.22}
+          emissiveIntensity={isActive ? 2.2 : hovered ? 1.4 : 0.85}
+          roughness={0.3}
+          metalness={0.05}
         />
 
         {/* Floating Label (Skip on mobile for performance) */}
@@ -251,22 +252,35 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
         </mesh>
       )}
 
-      {/* 4. Atmosphere haze ring */}
+      {/* 4. Inner color bloom — makes whole planet glow in its color */}
       <mesh>
-        <ringGeometry args={[data.size * 1.02, data.size * 1.18, 64]} />
+        <sphereGeometry args={[data.size, 24, 24]} />
+        <meshBasicMaterial
+          color={data.color}
+          transparent
+          opacity={isActive ? 0.38 : hovered ? 0.22 : 0.10}
+          side={THREE.BackSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* 4b. Atmosphere haze ring */}
+      <mesh>
+        <ringGeometry args={[data.size * 1.02, data.size * 1.22, 64]} />
         <meshBasicMaterial
           color={data.glowColor}
           transparent
-          opacity={isActive ? 0.28 : hovered ? 0.18 : 0.10}
+          opacity={isActive ? 0.45 : hovered ? 0.28 : 0.14}
           side={THREE.DoubleSide}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </mesh>
 
-      {/* 5. Fresnel Rim Glow — shines outward from sphere edge */}
+      {/* 5. Fresnel Rim Glow — wide atmospheric scatter */}
       {!isLowEnd && (
-        <mesh ref={glowRef} scale={1.18}>
+        <mesh ref={glowRef} scale={1.5}>
           <sphereGeometry args={[data.size, 32, 32]} />
           <shaderMaterial
             vertexShader={FRESNEL_VERTEX_SHADER}
@@ -279,6 +293,19 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
           />
         </mesh>
       )}
+
+      {/* 5b. Outer soft halo — distant color bloom */}
+      <mesh scale={2.2}>
+        <sphereGeometry args={[data.size, 16, 16]} />
+        <meshBasicMaterial
+          color={data.color}
+          transparent
+          opacity={isActive ? 0.08 : hovered ? 0.05 : 0.025}
+          side={THREE.BackSide}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
 
       {/* 6. Interactive Ring Selector */}
       <mesh ref={selectionRingRef}>
