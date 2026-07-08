@@ -10,6 +10,7 @@ import { soundEngine } from './audio/soundEngine'
 
 export default function App() {
   const [loaded, setLoaded] = useState(false)
+  const [sceneReady, setSceneReady] = useState(false)
 
   useEffect(() => {
     soundEngine.init()
@@ -65,20 +66,26 @@ export default function App() {
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
       <CustomCursor />
-      {!loaded && <LoadingScreen onComplete={() => setLoaded(true)} />}
-      {loaded && (
-        <>
-          <Universe
-            onPlanetClick={handlePlanetClick}
-            activePlanet={activePlanet}
-            cameraTarget={cameraTarget}
-          />
-          <HUD activePlanet={activePlanet} onNavClick={handlePlanetClick} />
-          {warping && <WarpTransition target={pendingPlanet} />}
-          {panelOpen && activePlanet && (
-            <PlanetPanel planet={activePlanet} onClose={handleClose} onNext={handleNextPlanet} />
-          )}
-        </>
+
+      {/* Universe renders early (hidden behind loading screen) so WebGL is ready when loading fades */}
+      <div style={{ opacity: sceneReady ? 1 : 0, transition: 'opacity 0.6s ease', position: 'absolute', inset: 0 }}>
+        <Universe
+          onPlanetClick={handlePlanetClick}
+          activePlanet={activePlanet}
+          cameraTarget={cameraTarget}
+        />
+        {loaded && <HUD activePlanet={activePlanet} onNavClick={handlePlanetClick} />}
+        {loaded && warping && <WarpTransition target={pendingPlanet} />}
+        {loaded && panelOpen && activePlanet && (
+          <PlanetPanel planet={activePlanet} onClose={handleClose} onNext={handleNextPlanet} />
+        )}
+      </div>
+
+      {!loaded && (
+        <LoadingScreen onComplete={() => {
+          setSceneReady(true)
+          setTimeout(() => setLoaded(true), 850)
+        }} />
       )}
     </div>
   )

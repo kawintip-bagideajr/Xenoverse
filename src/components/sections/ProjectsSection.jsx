@@ -15,6 +15,19 @@ const PROJECTS = [
     url: 'https://thaijourney.vercel.app/',
     image: '/projects/thaijn.png',
   },
+  {
+    id: 2,
+    name: 'XENOVERSE',
+    type: '3D PORTFOLIO · INTERACTIVE',
+    status: 'LIVE',
+    emoji: '🌌',
+    year: '2026',
+    desc: 'Immersive 3D space portfolio built with React Three Fiber. Features procedural planet textures, holographic HUD panels, custom cursor, starburst star effects, and real-time nebula. Every section is a planet you orbit to explore.',
+    tags: ['Three.js', 'React', 'Procedural', 'WebGL'],
+    statusColor: '#10b981',
+    url: 'https://xenoverse-portfolio.vercel.app',
+    image: '/projects/xenoverse.png',
+  },
 ]
 
 export default function ProjectsSection({ planet }) {
