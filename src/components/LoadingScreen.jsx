@@ -47,7 +47,7 @@ export default function LoadingScreen({ onComplete }) {
       {!done && (
         <motion.div
           key="loading"
-          className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-between overflow-hidden scan-line-overlay"
+          className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center overflow-hidden scan-line-overlay"
           exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         >
@@ -68,11 +68,10 @@ export default function LoadingScreen({ onComplete }) {
             style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)' }}
           />
 
-          {/* Logo hero — top section */}
+          {/* Logo hero */}
         <motion.div
           className="relative z-20 flex justify-center items-center w-full"
-          style={{ flex: '0 0 auto', paddingTop: '5vh' }}
-          initial={{ opacity: 0, scale: 1.04, y: -16 }}
+          initial={{ opacity: 0, scale: 1.04, y: -12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -80,17 +79,15 @@ export default function LoadingScreen({ onComplete }) {
             src="/xenova-logo.png"
             alt="XENOVERSE"
             style={{
-              maxWidth: 'min(420px, 80vw)',
-              maxHeight: '40vh',
+              width: 'min(340px, 72vw)',
               objectFit: 'contain',
               mixBlendMode: 'screen',
-              filter: 'drop-shadow(0 0 24px rgba(0,245,255,0.4))',
             }}
           />
         </motion.div>
 
-        {/* Terminal + progress + enter — bottom section */}
-        <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6 pb-8">
+        {/* Terminal + progress + enter */}
+        <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6">
 
             {/* Terminal */}
             <motion.div
