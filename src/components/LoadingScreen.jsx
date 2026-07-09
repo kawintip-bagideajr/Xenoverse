@@ -80,10 +80,11 @@ export default function LoadingScreen({ onComplete }) {
             src="/xenova-logo.png"
             alt="XENOVERSE"
             style={{
-              maxWidth: 'min(560px, 88vw)',
-              maxHeight: '46vh',
+              maxWidth: 'min(420px, 80vw)',
+              maxHeight: '40vh',
               objectFit: 'contain',
-              filter: 'drop-shadow(0 0 32px rgba(0,245,255,0.35)) drop-shadow(0 0 80px rgba(0,245,255,0.12))',
+              mixBlendMode: 'screen',
+              filter: 'drop-shadow(0 0 24px rgba(0,245,255,0.4))',
             }}
           />
         </motion.div>
