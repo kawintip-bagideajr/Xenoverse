@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import GlitchText from './ui/GlitchText'
 import { soundEngine } from '../audio/soundEngine'
@@ -14,10 +14,11 @@ const BOOT_LINES = [
 ]
 
 export default function LoadingScreen({ onComplete }) {
-  const [progress, setProgress] = useState(0)
   const [lines, setLines] = useState([])
   const [ready, setReady] = useState(false)
   const [done, setDone] = useState(false)
+
+  const progress = (lines.length / BOOT_LINES.length) * 100
 
   const handleEnter = () => {
     soundEngine.uiClick?.()
@@ -30,28 +31,17 @@ export default function LoadingScreen({ onComplete }) {
     let i = 0
     const iv = setInterval(() => {
       if (i < BOOT_LINES.length) {
-        const line = BOOT_LINES[i]
         soundEngine.bootBeep(i)
-        setLines((p) => [...p, line])
+        setLines(p => [...p, BOOT_LINES[i]])
         i++
-      } else {
-        clearInterval(iv)
+        if (i === BOOT_LINES.length) {
+          clearInterval(iv)
+          setTimeout(() => setReady(true), 400)
+        }
       }
     }, 330)
     return () => clearInterval(iv)
   }, [])
-
-  useEffect(() => {
-    const start = Date.now()
-    const dur = 2800
-    const tick = () => {
-      const p = Math.min(((Date.now() - start) / dur) * 100, 100)
-      setProgress(p)
-      if (p < 100) requestAnimationFrame(tick)
-      else setTimeout(() => setReady(true), 300)
-    }
-    requestAnimationFrame(tick)
-  }, [onComplete])
 
   return (
     <AnimatePresence>
@@ -231,7 +221,7 @@ export default function LoadingScreen({ onComplete }) {
                     width: `${progress}%`,
                     background: 'linear-gradient(90deg, rgba(0,245,255,0.4) 0%, #00f5ff 90%, #fff 100%)',
                     boxShadow: '0 0 12px rgba(0,245,255,0.9), 0 0 24px rgba(0,245,255,0.4)',
-                    transition: 'width 0.05s linear',
+                    transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
                 {/* Shimmer on the bar */}
