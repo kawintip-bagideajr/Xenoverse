@@ -35,14 +35,6 @@ const CHANNELS = [
     url: 'https://x.com/Xenova38',
     accent: '#f8fafc',
   },
-  {
-    icon: '⌥',
-    label: 'GITHUB',
-    sub: 'Xenova Projects',
-    value: 'github.com/xenova',
-    url: 'https://github.com/kawintip-bagideajr',
-    accent: '#a78bfa',
-  },
 ]
 
 export default function ContactSection({ planet }) {
