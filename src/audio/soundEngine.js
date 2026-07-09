@@ -268,10 +268,15 @@ class SoundEngine {
     this._ambient.out.gain.setTargetAtTime(v, this.ctx.currentTime, 0.8)
   }
 
+  setBgmVolume(v) {
+    this._bgmVol = v
+    if (!this.muted) this._setAmbientVol(v * 0.45)
+  }
+
   // ── Toggle mute ───────────────────────────────────────────────
   toggle() {
     this.muted = !this.muted
-    this._setAmbientVol(this.muted ? 0 : 0.45)
+    this._setAmbientVol(this.muted ? 0 : (this._bgmVol ?? 1) * 0.45)
     return !this.muted   // true = sound ON
   }
 

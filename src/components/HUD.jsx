@@ -100,6 +100,12 @@ function SystemStatus() {
 export default function HUD({ activePlanet, onNavClick }) {
   const [time, setTime] = useState('')
   const [soundOn, setSoundOn] = useState(true)
+  const [volume, setVolume] = useState(1)
+
+  const handleVolume = (v) => {
+    setVolume(v)
+    soundEngine.setBgmVolume(v)
+  }
   useEffect(() => {
     const update = () => {
       const d = new Date()
@@ -167,6 +173,27 @@ export default function HUD({ activePlanet, onNavClick }) {
               <span>{soundOn ? '◉' : '◌'}</span>
               <span>SFX</span>
             </motion.button>
+
+            {/* Volume slider */}
+            <div className="pointer-events-auto flex items-center gap-1.5">
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: soundOn ? 'rgba(0,245,255,0.35)' : 'rgba(0,245,255,0.12)', letterSpacing: '0.15em', transition: 'color 0.2s' }}>VOL</span>
+              <input
+                type="range" min="0" max="1" step="0.01"
+                value={volume}
+                disabled={!soundOn}
+                onChange={e => handleVolume(+e.target.value)}
+                style={{
+                  width: 60,
+                  accentColor: '#00f5ff',
+                  cursor: soundOn ? 'pointer' : 'default',
+                  opacity: soundOn ? 1 : 0.25,
+                  transition: 'opacity 0.2s',
+                }}
+              />
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: soundOn ? 'rgba(0,245,255,0.45)' : 'rgba(0,245,255,0.12)', letterSpacing: '0.1em', width: 22, textAlign: 'right', transition: 'color 0.2s' }}>
+                {Math.round(volume * 100)}
+              </span>
+            </div>
           </motion.div>
         </div>
       </div>
