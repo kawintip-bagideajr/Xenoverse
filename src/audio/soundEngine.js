@@ -156,38 +156,109 @@ class SoundEngine {
     this._noise(t + 0.05, 0.1, 0.06, 3500, 1)
   }
 
-  // ── Ambient space drone ────────────────────────────────────────
+  // ── Synthetic reverb via noise impulse response ────────────────
+  _createReverb(duration = 4.5) {
+    const rate = this.ctx.sampleRate
+    const len  = Math.floor(rate * duration)
+    const buf  = this.ctx.createBuffer(2, len, rate)
+    for (let c = 0; c < 2; c++) {
+      const d = buf.getChannelData(c)
+      for (let i = 0; i < len; i++)
+        d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2)
+    }
+    const conv = this.ctx.createConvolver()
+    conv.buffer = buf
+    return conv
+  }
+
+  // ── Cinematic space ambient ────────────────────────────────────
   startAmbient() {
     if (!this.ctx || this._ambient) return
     const t = this.ctx.currentTime
 
+    // Master out with slow fade-in
     const out = this.ctx.createGain()
     out.gain.setValueAtTime(0, t)
-    out.gain.linearRampToValueAtTime(this.muted ? 0 : 0.1, t + 5)
+    out.gain.linearRampToValueAtTime(this.muted ? 0 : 0.13, t + 6)
     out.connect(this.master)
+
+    // Reverb bus
+    const reverb = this._createReverb(4.5)
+    const rvbOut = this.ctx.createGain(); rvbOut.gain.value = 0.5
+    reverb.connect(rvbOut); rvbOut.connect(out)
 
     const nodes = []
 
-    // Sub bass drone
+    // ── Sub bass A1 (55 Hz) – dry only, LFO breathing ──
     const sub = this._osc('sine', 55)
-    const subG = this.ctx.createGain(); subG.gain.value = 0.7
+    const subG = this.ctx.createGain(); subG.gain.value = 0.5
     sub.connect(subG); subG.connect(out)
-    sub.start(); nodes.push(sub)
+    const subLFO = this._osc('sine', 0.055)
+    const subLFOG = this.ctx.createGain(); subLFOG.gain.value = 2.5
+    subLFO.connect(subLFOG); subLFOG.connect(sub.frequency)
+    sub.start(); subLFO.start()
+    nodes.push(sub, subLFO)
 
-    // Harmonic pad (minor chord overtones)
-    ;[[220, 0.3], [330, 0.18], [165, 0.22], [277, 0.12]].forEach(([f, v], i) => {
+    // ── Pad – A minor add9 voicing (A2 C3 E3 A3 B3) ──
+    // Lowpass filter sweeps open slowly for cinematic reveal
+    const padFilter = this.ctx.createBiquadFilter()
+    padFilter.type = 'lowpass'
+    padFilter.frequency.setValueAtTime(260, t)
+    padFilter.frequency.linearRampToValueAtTime(2400, t + 28)
+    padFilter.Q.value = 1.2
+    const padDry = this.ctx.createGain(); padDry.gain.value = 0.42
+    const padWet = this.ctx.createGain(); padWet.gain.value = 0.58
+    padFilter.connect(padDry); padDry.connect(out)
+    padFilter.connect(padWet); padWet.connect(reverb)
+
+    ;[
+      [110,   0.30,  0,    0.075],
+      [130.8, 0.22, -7,    0.088],
+      [164.8, 0.20,  5,    0.095],
+      [220,   0.14, -3,    0.070],
+      [246.9, 0.09,  8,    0.110],
+    ].forEach(([f, v, det, lfoRate]) => {
       const o = this._osc('sine', f)
-      o.detune.value = (i % 3 - 1) * 4   // slight detune per layer
-      const g = this.ctx.createGain(); g.gain.value = v
-      o.connect(g); g.connect(out)
-      o.start(); nodes.push(o)
+      o.detune.value = det
+      const g = this.ctx.createGain(); g.gain.value = v * 0.85
+      const lfo = this._osc('sine', lfoRate)
+      const lfoG = this.ctx.createGain(); lfoG.gain.value = v * 0.15
+      lfo.connect(lfoG); lfoG.connect(g.gain)
+      o.connect(g); g.connect(padFilter)
+      o.start(); lfo.start()
+      nodes.push(o, lfo)
     })
 
-    // Slow LFO breathing (modulates sub frequency slightly)
-    const lfo = this._osc('sine', 0.07)
-    const lfoG = this.ctx.createGain(); lfoG.gain.value = 3
-    lfo.connect(lfoG); lfoG.connect(sub.frequency)
-    lfo.start(); nodes.push(lfo)
+    // ── Airy high shimmer (wet only) ──
+    ;[[880, 0.022, 0], [1108, 0.015, 6], [1320, 0.011, -4]].forEach(([f, v, det], i) => {
+      const o = this._osc('sine', f)
+      o.detune.value = det
+      const g = this.ctx.createGain(); g.gain.value = v
+      const lfo = this._osc('sine', 0.10 + i * 0.023)
+      const lfoG = this.ctx.createGain(); lfoG.gain.value = v * 0.45
+      lfo.connect(lfoG); lfoG.connect(g.gain)
+      o.connect(g); g.connect(reverb)
+      o.start(); lfo.start()
+      nodes.push(o, lfo)
+    })
+
+    // ── Bell melody – A minor pentatonic, random, wet only ──
+    const bells = [220, 261.6, 293.7, 329.6, 392, 440, 523.3, 587.3]
+    const playBell = () => {
+      if (!this._ambient) return
+      const now  = this.ctx.currentTime
+      const freq = bells[Math.floor(Math.random() * bells.length)]
+      ;[[freq, 0.07, 4.0], [freq * 2.006, 0.022, 2.8]].forEach(([f, v, dur]) => {
+        const o = this._osc('sine', f)
+        const g = this.ctx.createGain()
+        g.gain.setValueAtTime(v, now)
+        g.gain.exponentialRampToValueAtTime(0.001, now + dur)
+        o.connect(g); g.connect(reverb)
+        o.start(now); o.stop(now + dur + 0.1)
+      })
+      this._bellTimer = setTimeout(playBell, 2800 + Math.random() * 2200)
+    }
+    this._bellTimer = setTimeout(playBell, 4500)
 
     this._ambient = { out, nodes }
   }
