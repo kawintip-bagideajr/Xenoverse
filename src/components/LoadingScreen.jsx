@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import GlitchText from './ui/GlitchText'
 import { soundEngine } from '../audio/soundEngine'
 
 const BOOT_LINES = [
@@ -48,7 +47,7 @@ export default function LoadingScreen({ onComplete }) {
       {!done && (
         <motion.div
           key="loading"
-          className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center overflow-hidden scan-line-overlay"
+          className="fixed inset-0 z-50 bg-black flex flex-col items-center justify-between overflow-hidden scan-line-overlay"
           exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         >
@@ -69,73 +68,28 @@ export default function LoadingScreen({ onComplete }) {
             style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)' }}
           />
 
-          <div className="relative z-20 flex flex-col items-center gap-7 w-full max-w-sm px-6">
-            {/* Logo mark */}
-            <motion.div
-              className="relative flex items-center justify-center"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {[1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full"
-                  style={{ width: 72 + i * 36, height: 72 + i * 36, border: '1px solid rgba(0,245,255,0.4)' }}
-                  animate={{ opacity: [0.5, 0], scale: [1, 1.7] }}
-                  transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.55, ease: 'easeOut' }}
-                />
-              ))}
+          {/* Logo hero — top section */}
+        <motion.div
+          className="relative z-20 flex justify-center items-center w-full"
+          style={{ flex: '0 0 auto', paddingTop: '5vh' }}
+          initial={{ opacity: 0, scale: 1.04, y: -16 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <img
+            src="/xenova-logo.png"
+            alt="XENOVERSE"
+            style={{
+              maxWidth: 'min(560px, 88vw)',
+              maxHeight: '46vh',
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 0 32px rgba(0,245,255,0.35)) drop-shadow(0 0 80px rgba(0,245,255,0.12))',
+            }}
+          />
+        </motion.div>
 
-              {/* Rotating outer ring */}
-              <motion.div
-                className="absolute w-28 h-28 rounded-full"
-                style={{
-                  border: '1px dashed rgba(0,245,255,0.25)',
-                  background: 'transparent',
-                }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-              />
-
-              {/* Core */}
-              <div
-                className="w-20 h-20 rounded-full flex items-center justify-center relative"
-                style={{
-                  background: 'radial-gradient(circle, rgba(0,245,255,0.15) 0%, rgba(0,0,0,0) 70%)',
-                  border: '1px solid rgba(0,245,255,0.6)',
-                  boxShadow: '0 0 24px rgba(0,245,255,0.4), inset 0 0 24px rgba(0,245,255,0.08)',
-                }}
-              >
-                <span
-                  className="text-2xl font-bold neon-text-sm"
-                  style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.1em' }}
-                >
-                  XV
-                </span>
-              </div>
-            </motion.div>
-
-            {/* Title with glitch */}
-            <motion.div
-              className="text-center"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h1
-                className="text-4xl md:text-5xl font-black neon-text tracking-[0.25em] holo-flicker"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                <GlitchText text="XENOVERSE" interval={4000} />
-              </h1>
-              <p
-                className="text-[10px] tracking-[0.55em] mt-2"
-                style={{ color: 'rgba(0,245,255,0.5)', fontFamily: 'var(--font-mono)' }}
-              >
-                STELLAR PORTFOLIO SYSTEM v2.0
-              </p>
-            </motion.div>
+        {/* Terminal + progress + enter — bottom section */}
+        <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6 pb-8">
 
             {/* Terminal */}
             <motion.div
