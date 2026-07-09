@@ -71,19 +71,41 @@ export default function LoadingScreen({ onComplete }) {
 
           <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6">
 
-            {/* Logo — replaces animated rings */}
-            <motion.img
-              src="/xenova-logo.png"
-              alt="XENOVERSE"
-              style={{
-                width: 'min(300px, 75vw)',
-                mixBlendMode: 'screen',
-                filter: 'contrast(2) brightness(1.05) saturate(1.2)',
-              }}
-              initial={{ scale: 0.88, opacity: 0 }}
+            {/* Logo with animated glow rings */}
+            <motion.div
+              className="relative flex items-center justify-center"
+              style={{ width: 280, height: 280 }}
+              initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            />
+            >
+              {/* Pulsing rings */}
+              {[190, 230, 270].map((size, i) => (
+                <motion.div
+                  key={size}
+                  className="absolute rounded-full"
+                  style={{ width: size, height: size, border: '1px solid rgba(0,245,255,0.45)' }}
+                  animate={{ opacity: [0.6, 0], scale: [1, 1.45] }}
+                  transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.6, ease: 'easeOut' }}
+                />
+              ))}
+              {/* Rotating dashed ring */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{ width: 210, height: 210, border: '1px dashed rgba(0,245,255,0.22)' }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+              />
+              {/* Emblem — transparent PNG, no blending needed */}
+              <img
+                src="/xenova-emblem.png"
+                alt="XENOVERSE"
+                style={{
+                  width: 168,
+                  filter: 'drop-shadow(0 0 12px rgba(0,245,255,0.8)) drop-shadow(0 0 28px rgba(0,245,255,0.4))',
+                }}
+              />
+            </motion.div>
 
             {/* Title */}
             <motion.div
