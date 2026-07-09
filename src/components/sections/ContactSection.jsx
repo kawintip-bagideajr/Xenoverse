@@ -40,7 +40,7 @@ const CHANNELS = [
     label: 'GITHUB',
     sub: 'Xenova Projects',
     value: 'github.com/xenova',
-    url: 'https://github.com/',
+    url: 'https://github.com/kawintip-bagideajr',
     accent: '#a78bfa',
   },
 ]
