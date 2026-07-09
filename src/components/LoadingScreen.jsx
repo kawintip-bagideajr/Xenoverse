@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import GlitchText from './ui/GlitchText'
 import { soundEngine } from '../audio/soundEngine'
 
 const BOOT_LINES = [
@@ -68,26 +69,42 @@ export default function LoadingScreen({ onComplete }) {
             style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)' }}
           />
 
-          {/* Logo hero */}
-        <motion.div
-          className="relative z-20 flex justify-center items-center w-full"
-          initial={{ opacity: 0, scale: 1.04, y: -12 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <img
-            src="/xenova-logo.png"
-            alt="XENOVERSE"
-            style={{
-              width: 'min(340px, 72vw)',
-              objectFit: 'contain',
-              mixBlendMode: 'screen',
-            }}
-          />
-        </motion.div>
+          <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6">
 
-        {/* Terminal + progress + enter */}
-        <div className="relative z-20 flex flex-col items-center gap-5 w-full max-w-sm px-6">
+            {/* Logo — replaces animated rings */}
+            <motion.img
+              src="/xenova-logo.png"
+              alt="XENOVERSE"
+              style={{
+                width: 'min(300px, 75vw)',
+                mixBlendMode: 'screen',
+                filter: 'contrast(2) brightness(1.05) saturate(1.2)',
+              }}
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            />
+
+            {/* Title */}
+            <motion.div
+              className="text-center -mt-4"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <h1
+                className="text-4xl md:text-5xl font-black neon-text tracking-[0.25em] holo-flicker"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                <GlitchText text="XENOVERSE" interval={4000} />
+              </h1>
+              <p
+                className="text-[10px] tracking-[0.55em] mt-2"
+                style={{ color: 'rgba(0,245,255,0.5)', fontFamily: 'var(--font-mono)' }}
+              >
+                STELLAR PORTFOLIO SYSTEM v2.0
+              </p>
+            </motion.div>
 
             {/* Terminal */}
             <motion.div
@@ -102,16 +119,11 @@ export default function LoadingScreen({ onComplete }) {
                   animate={{ opacity: [1, 0.2, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                 />
-                <span
-                  className="text-[10px] tracking-[0.35em]"
-                  style={{ color: 'rgba(0,245,255,0.55)', fontFamily: 'var(--font-mono)' }}
-                >
+                <span className="text-[10px] tracking-[0.35em]" style={{ color: 'rgba(0,245,255,0.55)', fontFamily: 'var(--font-mono)' }}>
                   SYSTEM BOOT LOG
                 </span>
                 <div className="flex-1" />
-                <span style={{ color: 'rgba(0,245,255,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9 }}>
-                  XENV-OS 2.0
-                </span>
+                <span style={{ color: 'rgba(0,245,255,0.25)', fontFamily: 'var(--font-mono)', fontSize: 9 }}>XENV-OS 2.0</span>
               </div>
 
               <div className="space-y-1 min-h-[126px]">
@@ -124,19 +136,11 @@ export default function LoadingScreen({ onComplete }) {
                     transition={{ duration: 0.25 }}
                   >
                     <span style={{ color: 'rgba(0,245,255,0.3)', fontFamily: 'var(--font-mono)', fontSize: 10, flexShrink: 0, marginTop: 1 }}>›</span>
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: 10,
-                        letterSpacing: '0.05em',
-                        color: line.highlight
-                          ? '#00f5ff'
-                          : i === lines.length - 1
-                          ? 'rgba(0,245,255,0.7)'
-                          : 'rgba(0,245,255,0.35)',
-                        textShadow: line.highlight ? '0 0 8px rgba(0,245,255,0.8)' : 'none',
-                      }}
-                    >
+                    <span style={{
+                      fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.05em',
+                      color: line.highlight ? '#00f5ff' : i === lines.length - 1 ? 'rgba(0,245,255,0.7)' : 'rgba(0,245,255,0.35)',
+                      textShadow: line.highlight ? '0 0 8px rgba(0,245,255,0.8)' : 'none',
+                    }}>
                       {line.text}
                     </span>
                     {line.ok && i < lines.length - 1 && (
@@ -145,27 +149,17 @@ export default function LoadingScreen({ onComplete }) {
                   </motion.div>
                 ))}
                 {lines.length > 0 && lines.length < BOOT_LINES.length && (
-                  <span
-                    className="inline-block w-[7px] h-[12px] ml-4"
-                    style={{ background: '#00f5ff', animation: 'blink 0.7s infinite' }}
-                  />
+                  <span className="inline-block w-[7px] h-[12px] ml-4" style={{ background: '#00f5ff', animation: 'blink 0.7s infinite' }} />
                 )}
               </div>
             </motion.div>
 
             {/* Progress */}
-            <motion.div
-              className="w-full"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-            >
+            <motion.div className="w-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
               <div className="flex justify-between mb-1.5" style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(0,245,255,0.4)', letterSpacing: '0.3em' }}>
                 <span>INITIALIZING</span>
                 <span>{Math.floor(progress)}%</span>
               </div>
-
-              {/* Multi-segment bar */}
               <div className="relative h-[3px] w-full overflow-hidden" style={{ background: 'rgba(0,245,255,0.08)' }}>
                 <div
                   className="absolute left-0 top-0 h-full"
@@ -176,7 +170,6 @@ export default function LoadingScreen({ onComplete }) {
                     transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
-                {/* Shimmer on the bar */}
                 <motion.div
                   className="absolute top-0 h-full w-8"
                   style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent)' }}
@@ -184,8 +177,6 @@ export default function LoadingScreen({ onComplete }) {
                   transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.3 }}
                 />
               </div>
-
-              {/* Tick marks */}
               <div className="flex justify-between mt-1">
                 {[0, 25, 50, 75, 100].map((t) => (
                   <div key={t} className="flex flex-col items-center gap-0.5">
@@ -223,20 +214,13 @@ export default function LoadingScreen({ onComplete }) {
                     whileHover={{ background: 'rgba(0,245,255,0.12)', boxShadow: '0 0 40px rgba(0,245,255,0.4)' }}
                     whileTap={{ scale: 0.97 }}
                   >
-                    {/* Shimmer sweep */}
                     <motion.div
                       className="absolute inset-0 pointer-events-none"
                       style={{ background: 'linear-gradient(90deg, transparent, rgba(0,245,255,0.12), transparent)' }}
                       animate={{ x: ['-100%', '200%'] }}
                       transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.6 }}
                     />
-                    <motion.span
-                      animate={{ opacity: [1, 0.5, 1] }}
-                      transition={{ duration: 1.2, repeat: Infinity }}
-                      style={{ fontSize: 10 }}
-                    >
-                      ▶
-                    </motion.span>
+                    <motion.span animate={{ opacity: [1, 0.5, 1] }} transition={{ duration: 1.2, repeat: Infinity }} style={{ fontSize: 10 }}>▶</motion.span>
                     <span>ENTER XENOVERSE</span>
                   </motion.button>
                 </motion.div>
