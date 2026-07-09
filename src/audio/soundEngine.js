@@ -179,19 +179,19 @@ class SoundEngine {
     // Master out with slow fade-in
     const out = this.ctx.createGain()
     out.gain.setValueAtTime(0, t)
-    out.gain.linearRampToValueAtTime(this.muted ? 0 : 0.13, t + 6)
+    out.gain.linearRampToValueAtTime(this.muted ? 0 : 0.45, t + 3)
     out.connect(this.master)
 
     // Reverb bus
     const reverb = this._createReverb(4.5)
-    const rvbOut = this.ctx.createGain(); rvbOut.gain.value = 0.5
+    const rvbOut = this.ctx.createGain(); rvbOut.gain.value = 0.75
     reverb.connect(rvbOut); rvbOut.connect(out)
 
     const nodes = []
 
     // ── Sub bass A1 (55 Hz) – dry only, LFO breathing ──
     const sub = this._osc('sine', 55)
-    const subG = this.ctx.createGain(); subG.gain.value = 0.5
+    const subG = this.ctx.createGain(); subG.gain.value = 0.8
     sub.connect(subG); subG.connect(out)
     const subLFO = this._osc('sine', 0.055)
     const subLFOG = this.ctx.createGain(); subLFOG.gain.value = 2.5
@@ -212,11 +212,11 @@ class SoundEngine {
     padFilter.connect(padWet); padWet.connect(reverb)
 
     ;[
-      [110,   0.30,  0,    0.075],
-      [130.8, 0.22, -7,    0.088],
-      [164.8, 0.20,  5,    0.095],
-      [220,   0.14, -3,    0.070],
-      [246.9, 0.09,  8,    0.110],
+      [110,   0.55,  0,    0.075],
+      [130.8, 0.42, -7,    0.088],
+      [164.8, 0.38,  5,    0.095],
+      [220,   0.28, -3,    0.070],
+      [246.9, 0.18,  8,    0.110],
     ].forEach(([f, v, det, lfoRate]) => {
       const o = this._osc('sine', f)
       o.detune.value = det
@@ -230,7 +230,7 @@ class SoundEngine {
     })
 
     // ── Airy high shimmer (wet only) ──
-    ;[[880, 0.022, 0], [1108, 0.015, 6], [1320, 0.011, -4]].forEach(([f, v, det], i) => {
+    ;[[880, 0.06, 0], [1108, 0.04, 6], [1320, 0.03, -4]].forEach(([f, v, det], i) => {
       const o = this._osc('sine', f)
       o.detune.value = det
       const g = this.ctx.createGain(); g.gain.value = v
@@ -248,7 +248,7 @@ class SoundEngine {
       if (!this._ambient) return
       const now  = this.ctx.currentTime
       const freq = bells[Math.floor(Math.random() * bells.length)]
-      ;[[freq, 0.07, 4.0], [freq * 2.006, 0.022, 2.8]].forEach(([f, v, dur]) => {
+      ;[[freq, 0.16, 4.0], [freq * 2.006, 0.06, 2.8]].forEach(([f, v, dur]) => {
         const o = this._osc('sine', f)
         const g = this.ctx.createGain()
         g.gain.setValueAtTime(v, now)
@@ -258,7 +258,7 @@ class SoundEngine {
       })
       this._bellTimer = setTimeout(playBell, 2800 + Math.random() * 2200)
     }
-    this._bellTimer = setTimeout(playBell, 4500)
+    this._bellTimer = setTimeout(playBell, 1500)
 
     this._ambient = { out, nodes }
   }
@@ -271,7 +271,7 @@ class SoundEngine {
   // ── Toggle mute ───────────────────────────────────────────────
   toggle() {
     this.muted = !this.muted
-    this._setAmbientVol(this.muted ? 0 : 0.1)
+    this._setAmbientVol(this.muted ? 0 : 0.45)
     return !this.muted   // true = sound ON
   }
 
