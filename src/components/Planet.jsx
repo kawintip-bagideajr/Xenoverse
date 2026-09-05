@@ -195,8 +195,8 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
           metalness={0.05}
         />
 
-        {/* Floating Label (Skip on mobile for performance) */}
-        {!isMobile && (hovered || isActive) && (
+        {/* Active label — compact tag while the planet's panel is open */}
+        {!isMobile && isActive && (
           <Html
             center
             distanceFactor={12}
@@ -218,6 +218,124 @@ export default function Planet({ data, onClick, isActive, planetPositionsRef }) 
               }}
             >
               {data.emoji} {data.label.toUpperCase()}
+            </div>
+          </Html>
+        )}
+
+        {/* Hologram readout — projects up from the planet on hover */}
+        {!isMobile && hovered && !isActive && (
+          <Html
+            center
+            distanceFactor={7.5}
+            style={{ pointerEvents: 'none', userSelect: 'none' }}
+          >
+            <div style={{ position: 'relative', width: 280 }}>
+              {/* Projector base ring, sits at the planet anchor point */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: 0,
+                  width: 28,
+                  height: 10,
+                  borderRadius: '50%',
+                  border: `1.5px solid ${data.color}`,
+                  transform: 'translate(-50%, -50%)',
+                  animation: 'holo-beam-pulse 2s ease-in-out infinite',
+                }}
+              />
+              {/* Beam connecting the planet to the floating card */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  top: -150,
+                  width: 2,
+                  height: 150,
+                  background: `linear-gradient(180deg, transparent, ${data.color}90 70%, ${data.color})`,
+                  transform: 'translateX(-50%)',
+                  animation: 'holo-beam-pulse 2s ease-in-out infinite',
+                }}
+              />
+
+              {/* Hologram card */}
+              <div
+                className="holo-pop-in holo-flicker"
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  bottom: 20,
+                  transform: 'translateX(-50%)',
+                  width: 260,
+                  padding: '16px 18px',
+                  borderRadius: 6,
+                  background: `linear-gradient(180deg, ${data.color}1a, rgba(0,4,8,0.9))`,
+                  border: `1.5px solid ${data.color}90`,
+                  boxShadow: `0 0 30px ${data.color}60, inset 0 0 22px ${data.color}1a`,
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Scanline texture */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    pointerEvents: 'none',
+                    background: `repeating-linear-gradient(0deg, transparent 0px, ${data.color}14 1px, transparent 2px, transparent 3px)`,
+                  }}
+                />
+                {/* Moving sweep line */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    height: 3,
+                    background: data.color,
+                    boxShadow: `0 0 10px 2px ${data.color}`,
+                    animation: 'holo-scanline 2.2s linear infinite',
+                  }}
+                />
+
+                {/* Corner brackets */}
+                {[
+                  { top: -2, left: -2, borderWidth: '3px 0 0 3px' },
+                  { top: -2, right: -2, borderWidth: '3px 3px 0 0' },
+                  { bottom: -2, left: -2, borderWidth: '0 0 3px 3px' },
+                  { bottom: -2, right: -2, borderWidth: '0 3px 3px 0' },
+                ].map((pos, idx) => (
+                  <div key={idx} style={{ position: 'absolute', width: 12, height: 12, borderColor: data.color, borderStyle: 'solid', ...pos }} />
+                ))}
+
+                <div className="flex items-center gap-2 relative">
+                  <span style={{ fontSize: 22 }}>{data.emoji}</span>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 15,
+                      letterSpacing: '0.25em',
+                      color: data.color,
+                      textShadow: `0 0 12px ${data.color}`,
+                    }}
+                  >
+                    {data.label.toUpperCase()}
+                  </span>
+                </div>
+                <div
+                  className="relative"
+                  style={{
+                    marginTop: 7,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 12,
+                    color: 'rgba(255,255,255,0.65)',
+                    letterSpacing: '0.03em',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {data.description}
+                </div>
+              </div>
             </div>
           </Html>
         )}

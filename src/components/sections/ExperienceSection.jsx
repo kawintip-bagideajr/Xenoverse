@@ -48,7 +48,7 @@ function DayCounter({ color }) {
 
       <div className="flex justify-center gap-6 mt-4">
         {[
-          { val: '4', lbl: 'CREW' },
+          { val: '5', lbl: 'CREW' },
           { val: '1', lbl: 'PRODUCT' },
           { val: '∞', lbl: 'DRIVE' },
         ].map(s => (

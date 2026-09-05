@@ -13,9 +13,7 @@ const CREW = [
     id:       'blueblue',
     name:     'THANABODE JANDA',
     nickname: 'BLUEBLUE',
-    role:     'LEAD DEVELOPER',
-    tag:      'LEAD',
-    isLead:   true,
+    signal:   'FIRST TO ARRIVE',
     color:    '#00f5ff',
     pfp:      BluePFP,
     fb:       'https://www.facebook.com/thana.bodi.784064',
@@ -25,9 +23,7 @@ const CREW = [
     id:       'aumim',
     name:     'KAWINTIP SURIYA',
     nickname: 'AUMIM',
-    role:     'PROJECT MANAGER',
-    tag:      'PM',
-    isLead:   false,
+    signal:   'KEEPS ORBIT STABLE',
     color:    '#a78bfa',
     pfp:      AumimPFP,
     fb:       'https://www.facebook.com/kawintip.suriya',
@@ -37,9 +33,7 @@ const CREW = [
     id:       'taetae',
     name:     'WIPHON JANDA',
     nickname: 'TAETAE',
-    role:     'FULL-STACK DEVELOPER',
-    tag:      'DEV',
-    isLead:   false,
+    signal:   'BUILDS IN SILENCE',
     color:    '#34d399',
     pfp:      TaePFP,
     fb:       'https://www.facebook.com/cchanthrdaawiphl',
@@ -49,18 +43,26 @@ const CREW = [
     id:       'proud',
     name:     'NICHANAN KAMLON',
     nickname: 'PROUD',
-    role:     'UI / UX DESIGNER',
-    tag:      'DSN',
-    isLead:   false,
+    signal:   'SEES WHAT OTHERS MISS',
     color:    '#f9a8d4',
     pfp:      ProudPFP,
     fb:       'https://www.facebook.com/ni.chnanth.kha.holn',
     ig:       'https://www.instagram.com/nichnanthkhmaaohln/',
   },
+  {
+    id:       'notebook',
+    name:     'NOTEBOOK',
+    nickname: 'NOTEBOOK',
+    signal:   'NEWEST TRANSMISSION',
+    color:    '#fbbf24',
+    pfp:      null,
+    fb:       null,
+    ig:       null,
+  },
 ]
 
 const STATS = [
-  { value: 4,  suffix: '',  label: 'CREW MEMBERS',      placeholder: '4' },
+  { value: 5,  suffix: '',  label: 'CREW MEMBERS',      placeholder: '5' },
   { value: 1,  suffix: '+', label: 'PRODUCTS LAUNCHED', placeholder: '1' },
   { value: 0,  suffix: '',  label: 'COMPROMISES MADE',  placeholder: '0' },
 ]
@@ -69,7 +71,7 @@ const VALUES = [
   { icon: '⚡', label: 'PRECISION OVER SPEED',  sub: 'Ship it right, or don\'t ship it' },
   { icon: '🎨', label: 'DESIGN IS THINKING',    sub: 'Great products start before the first line of code' },
   { icon: '🔭', label: 'SMALL STARS, LONG BURN', sub: 'We grow quiet, then undeniable' },
-  { icon: '🤝', label: 'ZERO COMPROMISE',        sub: 'Four minds. One standard.' },
+  { icon: '🤝', label: 'ZERO COMPROMISE',        sub: 'Five minds. One standard.' },
 ]
 
 export default function AboutSection({ planet }) {
@@ -104,14 +106,14 @@ export default function AboutSection({ planet }) {
                 DEVELOPMENT TEAM
               </div>
               <div className="mt-0.5 tracking-widest" style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.25)' }}>
-                2 DEV · 1 DESIGNER · 1 PM
+                5 SIGNALS · 1 CREW
               </div>
             </div>
           </div>
 
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'var(--font-body)', lineHeight: 1.75 }}>
             <TypewriterText
-              text="Xenova is a four-person development team specializing in application development, web solutions, and digital innovation. We combine engineering precision with design thinking to deliver products that are built to perform and built to last."
+              text="Xenova is a five-person development team specializing in application development, web solutions, and digital innovation. We combine engineering precision with design thinking to deliver products that are built to perform and built to last."
               speed={18}
               delay={300}
               showCursor={false}
@@ -165,19 +167,37 @@ export default function AboutSection({ planet }) {
               transition={{ delay: 0.35 + i * 0.07, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
               {/* Avatar */}
-              <div
-                className="flex-shrink-0"
-                style={{
-                  width: isMobile ? 48 : 40,
-                  height: isMobile ? 48 : 40,
-                  borderRadius: 12,
-                  backgroundImage: `url(${m.pfp})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundColor: `${m.color}18`,
-                  border: `1.5px solid ${m.color}40`,
-                }}
-              />
+              {m.pfp ? (
+                <div
+                  className="flex-shrink-0"
+                  style={{
+                    width: isMobile ? 48 : 40,
+                    height: isMobile ? 48 : 40,
+                    borderRadius: 12,
+                    backgroundImage: `url(${m.pfp})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundColor: `${m.color}18`,
+                    border: `1.5px solid ${m.color}40`,
+                  }}
+                />
+              ) : (
+                <div
+                  className="flex-shrink-0 flex items-center justify-center"
+                  style={{
+                    width: isMobile ? 48 : 40,
+                    height: isMobile ? 48 : 40,
+                    borderRadius: 12,
+                    backgroundColor: `${m.color}18`,
+                    border: `1.5px solid ${m.color}40`,
+                    fontFamily: 'var(--font-display)',
+                    fontSize: isMobile ? 16 : 14,
+                    color: m.color,
+                  }}
+                >
+                  {m.nickname.charAt(0)}
+                </div>
+              )}
 
               {/* Info */}
               <div className="flex-1 min-w-0">
@@ -190,15 +210,6 @@ export default function AboutSection({ planet }) {
                   }}>
                     {m.nickname}
                   </span>
-                  {m.isLead && (
-                    <span style={{
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 6,
-                      color: m.color,
-                      opacity: 0.7,
-                      letterSpacing: '0.15em',
-                    }}>★</span>
-                  )}
                 </div>
                 <div style={{
                   fontFamily: 'var(--font-mono)',
@@ -207,13 +218,13 @@ export default function AboutSection({ planet }) {
                   letterSpacing: '0.08em',
                   marginTop: 1,
                 }}>
-                  {m.role}
+                  {m.signal}
                 </div>
               </div>
 
               {/* Social buttons — row of small circles */}
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                {m.fb && (
+                {m.fb ? (
                   <motion.a href={m.fb} target="_blank" rel="noopener noreferrer" title="Facebook"
                     style={{ width: isMobile?36:30, height: isMobile?36:30, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(24,119,242,0.15)', border:'1px solid rgba(24,119,242,0.3)', textDecoration:'none', flexShrink:0 }}
                     whileHover={{ scale:1.15, background:'rgba(24,119,242,0.3)' }} whileTap={{ scale:0.88 }}
@@ -222,8 +233,16 @@ export default function AboutSection({ planet }) {
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </motion.a>
+                ) : (
+                  <div title="Not linked yet"
+                    style={{ width: isMobile?36:30, height: isMobile?36:30, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', flexShrink:0, opacity:0.35 }}
+                  >
+                    <svg width={isMobile?15:13} height={isMobile?15:13} viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </div>
                 )}
-                {m.ig && (
+                {m.ig ? (
                   <motion.a href={m.ig} target="_blank" rel="noopener noreferrer" title="Instagram"
                     style={{ width: isMobile?36:30, height: isMobile?36:30, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(225,48,108,0.12)', border:'1px solid rgba(225,48,108,0.28)', textDecoration:'none', flexShrink:0 }}
                     whileHover={{ scale:1.15, background:'rgba(225,48,108,0.26)' }} whileTap={{ scale:0.88 }}
@@ -237,6 +256,14 @@ export default function AboutSection({ planet }) {
                       <path fill={`url(#ig-${m.id})`} d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                     </svg>
                   </motion.a>
+                ) : (
+                  <div title="Not linked yet"
+                    style={{ width: isMobile?36:30, height: isMobile?36:30, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.08)', flexShrink:0, opacity:0.35 }}
+                  >
+                    <svg width={isMobile?15:13} height={isMobile?15:13} viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.209-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </div>
                 )}
               </div>
 
@@ -256,7 +283,7 @@ export default function AboutSection({ planet }) {
             <div className="flex-1 h-[1px]" style={{ background: `${c}20` }} />
           </div>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.38)', fontFamily: 'var(--font-body)', lineHeight: 1.8 }}>
-            Every constellation started as four points of light in the dark. We are not the biggest. Not yet. But every product we ship, every problem we crack, every user we reach — pulls us closer to the edge of the horizon. We rise slow. We rise sure.
+            Every constellation started as five points of light in the dark. We are not the biggest. Not yet. But every product we ship, every problem we crack, every user we reach — pulls us closer to the edge of the horizon. We rise slow. We rise sure.
           </p>
         </div>
       </ScanCard>

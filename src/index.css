@@ -144,9 +144,29 @@ body { cursor: crosshair; }
   97%      { opacity: 1; }
 }
 
+@keyframes holo-pop {
+  0%   { opacity: 0; transform: scaleY(0.25) scaleX(0.85) translateY(8px); filter: brightness(2.2); }
+  35%  { opacity: 1; transform: scaleY(1.08) scaleX(1.03) translateY(-3px); filter: brightness(1.6); }
+  55%  { transform: scaleY(0.97) scaleX(0.99) translateY(0px); }
+  100% { opacity: 1; transform: scaleY(1) scaleX(1) translateY(0); filter: brightness(1); }
+}
+
+@keyframes holo-scanline {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.8; }
+  100% { transform: translateY(2200%); opacity: 0; }
+}
+
+@keyframes holo-beam-pulse {
+  0%,100% { opacity: 0.35; }
+  50%      { opacity: 0.9; }
+}
+
 /* ─── Utility classes ─── */
 .float-anim   { animation: float 7s ease-in-out infinite; }
 .holo-flicker { animation: holo-flicker 4s ease-in-out infinite; }
+.holo-pop-in  { animation: holo-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; transform-origin: bottom center; }
 
 .shimmer-text {
   background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, #fff 40%, rgba(0,245,255,0.9) 50%, #fff 60%, rgba(255,255,255,0.3) 100%);
