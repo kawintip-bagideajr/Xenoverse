@@ -7,6 +7,7 @@ import BluePFP  from '../../assets/pfp/BluePFP.jpg'
 import AumimPFP from '../../assets/pfp/AumimPFP.jpg'
 import TaePFP   from '../../assets/pfp/TaePFP.jpg'
 import ProudPFP from '../../assets/pfp/ProudPFP.jpg'
+import NotePFP  from '../../assets/pfp/NotePFP.jpg'
 
 const CREW = [
   {
@@ -51,13 +52,13 @@ const CREW = [
   },
   {
     id:       'notebook',
-    name:     'NOTEBOOK',
+    name:     'NATTANA DANPHONG',
     nickname: 'NOTEBOOK',
     signal:   'NEWEST TRANSMISSION',
-    color:    '#fbbf24',
-    pfp:      null,
-    fb:       null,
-    ig:       null,
+    color:    '#e02b13',
+    pfp:      NotePFP,
+    fb:       'https://www.facebook.com/share/19XhSFswMa',
+    ig:       'https://www.instagram.com/kemmankhluea?stkn=MWNkenVpc3Q5bTF5dg',
   },
 ]
 
